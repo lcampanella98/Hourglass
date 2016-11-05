@@ -46,8 +46,6 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static android.os.Build.VERSION_CODES.M;
-
 public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
@@ -406,7 +404,7 @@ public class MainActivity extends Activity
                 mOutputText.setText(TextUtils.join("\n", output));
                 long arr[] = new long[starts.size()];
                 for(int i = 0; i<=starts.size()-1;i++){
-                    Minutes minutes = Minutes.minutesBetween(starts.get(i), ends.get(i));
+                    //Minutes minutes = Minutes.minutesBetween(starts.get(i), ends.get(i));
                 }
                 //mOutputText.setText(starts.toString() + '\n' + ends.toString());
                 mOutputText.setText(arr.toString());
