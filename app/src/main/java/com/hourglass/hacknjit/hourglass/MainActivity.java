@@ -1,22 +1,5 @@
 package com.hourglass.hacknjit.hourglass;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
-
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.client.util.DateTime;
-
-import com.google.api.services.calendar.model.*;
-
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -38,13 +21,32 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
+
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
@@ -351,13 +353,18 @@ public class MainActivity extends Activity
          * @return List of Strings describing returned events.
          * @throws IOException
          */
+        private ArrayList<DateTime> starts;
+        private ArrayList<DateTime> ends;
         private List<String> getDataFromApi() throws IOException {
+            starts = new ArrayList<>();
+            ends = new ArrayList<>();
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(10)
+                    .setMaxResults(200)
                     .setTimeMin(now)
+                    //.setTimeMax(max)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
@@ -365,13 +372,19 @@ public class MainActivity extends Activity
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
+                DateTime end = event.getEnd().getDateTime();
                 if (start == null) {
                     // All-day events don't have start times, so just use
                     // the start date.
                     start = event.getStart().getDate();
                 }
+                if(end == null){
+                    end = event.getEnd().getDate();
+                }
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
+                starts.add(start);
+                ends.add(end);
             }
             return eventStrings;
         }
@@ -391,6 +404,12 @@ public class MainActivity extends Activity
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
+                long arr[] = new long[starts.size()];
+                for(int i = 0; i<=starts.size()-1;i++){
+                    Minutes minutes = Minutes.minutesBetween(starts.get(i), ends.get(i));
+                }
+                //mOutputText.setText(starts.toString() + '\n' + ends.toString());
+                mOutputText.setText(arr.toString());
             }
         }
 
@@ -415,4 +434,15 @@ public class MainActivity extends Activity
             }
         }
     }
+    public ArrayList<Calendar> findAvaiableTimes(Event event, Time hours){
+        ArrayList<Calendar> rtn = new ArrayList<Calendar>();
+       // Date startDate = (event.getStart().getDate()).toDate();
+        //DateTime endDate = event.getEnd().getDate();
+       // DateTime startTime = event.getStart().getDateTime();
+        //DateTime endTime = event.getEnd().getDateTime();
+
+
+        return rtn;
+    }
 }
+
