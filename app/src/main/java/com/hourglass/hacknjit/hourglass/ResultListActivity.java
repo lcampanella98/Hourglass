@@ -1,33 +1,22 @@
 package com.hourglass.hacknjit.hourglass;
 
-import android.app.ListActivity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class ResultListActivity extends AppCompatActivity {
 
@@ -39,6 +28,7 @@ public class ResultListActivity extends AppCompatActivity {
     private List<String> stringDates;
     private View selectedView;
     private int prevTextColor, prevBGColor;
+    private long hoursMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +46,7 @@ public class ResultListActivity extends AppCompatActivity {
         }
 
         freeDatesList = (ArrayList<DateTime>) getIntent().getSerializableExtra(MainActivity.FREE_DATES);
+        hoursMillis = getIntent().getLongExtra(MainActivity.HOURS_MILLIS, 0L);
         stringDates = new ArrayList<>();
         for (DateTime dt : freeDatesList) {
             stringDates.add(getDateText(dt));
@@ -89,7 +80,10 @@ public class ResultListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Integer pos = adapter.getChosenPosition();
                 if (pos != null) {
-                    // start the activity!!!
+                    Intent i = new Intent(getApplicationContext(), SubmitActivity.class);
+                    i.putExtra(MainActivity.HOURS_MILLIS, hoursMillis);
+                    i.putExtra(MainActivity.START_DATE, freeDatesList.get(pos));
+                    startActivity(i);
                 }
             }
         });

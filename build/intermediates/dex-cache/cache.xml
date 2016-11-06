@@ -21,6 +21,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\org.mortbay.jetty\jetty-util\6.1.26\e5642fe0399814e1687d55a3862aa5a3417226a9\jetty-util-6.1.26.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e5642fe0399814e1687d55a3862aa5a3417226a9">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\jetty-util-6.1.26_3ee14d647b189b7143c277e9b6943eea7d0da6c3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\com.google.http-client\google-http-client-android\1.22.0\6d1e1a76a16a244ab2f41775791be1dd0ec2878a\google-http-client-android-1.22.0.jar"
         jumboMode="true"
         optimize="true"
@@ -102,6 +111,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\com.google.oauth-client\google-oauth-client-jetty\1.22.0\b94c1e7d6c73cb1c15e2e5569cc6fda08cc80099\google-oauth-client-jetty-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b94c1e7d6c73cb1c15e2e5569cc6fda08cc80099">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\google-oauth-client-jetty-1.22.0_1bee50e11f568723046a2389ced3595b0596b0ee\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\9.0.2\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -135,6 +153,15 @@
         revision="25.0.0"
         sha1="94d9cedd04b124aed044ac71c451a292856d854c">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-9.0.2_c09e34633f230cbe3db94a63daabb22c862d8b29\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\org.mortbay.jetty\servlet-api\2.5-20081211\22bff70037e1e6fa7e6413149489552ee2064702\servlet-api-2.5-20081211.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="22bff70037e1e6fa7e6413149489552ee2064702">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\servlet-api-2.5-20081211_adfe37edf39ee21c6726baf194044287a4e158bc\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -214,7 +241,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="caebe1a601ba6002f7d3818e6960d8bec7aa1420">
+        sha1="412ad1aea296573ddfad09b48b94765e47724083">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_1548faa7d11ccf41fccc8e1c11ffba0dd83374c7\classes.dex" />
     </item>
     <item
@@ -223,7 +250,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="e1d2a3848367989a388219836f3f89c57a94426b">
+        sha1="0cd35a0e63a8d50f93aacb4f2982d26c4b00e716">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_bdcfccbabed2565eb06160dbb5e3e7c9a0c22a4c\classes.dex" />
     </item>
     <item
@@ -234,6 +261,24 @@
         revision="25.0.0"
         sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_1d73614adc383b8aa82c527787fddff8705c3946\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\com.google.oauth-client\google-oauth-client-java6\1.22.0\6cbd19cd33d55bcaac2d842a57f5ade9260bed99\google-oauth-client-java6-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6cbd19cd33d55bcaac2d842a57f5ade9260bed99">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\google-oauth-client-java6-1.22.0_8e38f18c686a0030b604b656ac3b46d011bdd69a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\org.mortbay.jetty\jetty\6.1.26\2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0\jetty-6.1.26.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\jetty-6.1.26_7c5c4d1d0467f10c86f7abe054b8f125637ad9b2\classes.dex" />
     </item>
     <item
         is-multidex="true"

@@ -2,7 +2,6 @@ package com.hourglass.hacknjit.hourglass;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,12 +60,14 @@ import java.util.TimeZone;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends Activity
+public class MainActivity extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks, DatePickerDialog.OnDateSetListener, onTaskCompleted {
 
     public static final String FREE_DATES = "com.hourglass.hacknjit.hourglass.FREE_DATES";
+    public static final String HOURS_MILLIS = "com.hourglass.hacknjit.hourglass.HOURS_MILLIS";
+    public static final String START_DATE = "com.hourglass.hacknjit.hourglass.START_DATE";
 
-    GoogleAccountCredential mCredential;
+    static GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private FloatingActionButton fab;
     ProgressDialog mProgress;
@@ -81,11 +84,13 @@ public class MainActivity extends Activity
     private String currentDialog;
     private int day, month, year;
     private static Date startDate, endDate;
-    private int hoursChunk;
+    private long hoursChunk;
     private java.util.Calendar calendar;
 
     private static ArrayList<DateTime> starts;
     private static ArrayList<DateTime> ends;
+
+    private Toolbar toolbar;
 
     /**
      * Create the main activity.
@@ -97,6 +102,8 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         calendar = new GregorianCalendar();
@@ -175,7 +182,7 @@ public class MainActivity extends Activity
             starts = new ArrayList<>();
             ends = new ArrayList<>();
 
-            Toast.makeText(getApplicationContext(), startDate.toString() + "\n" + endDate.toString() + "\n" + hoursChunk, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), startDate.toString() + "\n" + endDate.toString() + "\n" + hoursChunk, Toast.LENGTH_LONG).show();
             getResultsFromApi();
 
         }
@@ -192,8 +199,8 @@ public class MainActivity extends Activity
         //Toast.makeText(getApplicationContext(), x.toString(), Toast.LENGTH_LONG).show();
         Intent i = new Intent(getApplicationContext(), ResultListActivity.class);
         i.putExtra(MainActivity.FREE_DATES, (Serializable) freeDates);
+        i.putExtra(MainActivity.HOURS_MILLIS, hoursChunk);
         startActivity(i);
-
     }
 
     public ArrayList<Event> findFreeTime(long millis) {
@@ -275,7 +282,7 @@ public class MainActivity extends Activity
                     picker.setMaxValue(len - 1);
                     picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
                     picker.setMinValue(0);
-                    String values[] = new String[len];
+                    final String values[] = new String[len];
                     for (int i = 0; i <= len - 1; i++) {
                         values[i] = Double.toString((i + 1) * 0.5);
                     }
@@ -290,7 +297,7 @@ public class MainActivity extends Activity
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            hoursChunk = ((picker.getValue())+1)/2 * 60 * 60000;
+                            hoursChunk = Math.round(Double.parseDouble(values[picker.getValue()]) * 60 * 60000);
                             addNextDialog();
                         }
                     });
@@ -513,9 +520,9 @@ public class MainActivity extends Activity
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
 
-
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
+    public static com.google.api.services.calendar.Calendar mService = null;
+     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+         com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
         private onTaskCompleted listener;
 
@@ -527,6 +534,7 @@ public class MainActivity extends Activity
                     transport, jsonFactory, credential)
                     .setApplicationName("Google Calendar API Android Quickstart")
                     .build();
+            MainActivity.mService = mService;
         }
 
         /**
