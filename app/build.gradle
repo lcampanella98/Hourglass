@@ -1,14 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        signed {
-            keyAlias 'hourglass'
-            keyPassword 'hourglass'
-            storeFile file('C:/Users/Michael/AndroidStudioProjects/Hourglass/CheckOUt/Keystore/keystore.jks')
-            storePassword 'hourglass'
-        }
-    }
+
     compileSdkVersion 23
     buildToolsVersion "24.0.1"
     defaultConfig {
@@ -18,16 +11,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.signed
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.signed
         }
         debug {
-            signingConfig signingConfigs.signed
         }
     }
     productFlavors {
