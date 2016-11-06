@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +61,10 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends Activity
-        implements EasyPermissions.PermissionCallbacks, DatePickerDialog.OnDateSetListener, onTaskCompleted{
+        implements EasyPermissions.PermissionCallbacks, DatePickerDialog.OnDateSetListener, onTaskCompleted {
+
+    public static final String FREE_DATES = "com.hourglass.hacknjit.hourglass.FREE_DATES";
+
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private FloatingActionButton fab;
@@ -72,7 +77,7 @@ public class MainActivity extends Activity
 
     private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
 
     private String currentDialog;
     private int day, month, year;
@@ -82,8 +87,10 @@ public class MainActivity extends Activity
 
     private static ArrayList<DateTime> starts;
     private static ArrayList<DateTime> ends;
+
     /**
      * Create the main activity.
+     *
      * @param savedInstanceState previously saved instance data.
      */
     @Override
@@ -130,8 +137,8 @@ public class MainActivity extends Activity
                 .setBackOff(new ExponentialBackOff());
 
 
-
     }
+
     Date cDate;
     Queue<String> dialogsQueue;
 
@@ -156,8 +163,7 @@ public class MainActivity extends Activity
             System.out.println("startDate Set!");
             startDate = cDate;
 
-        }
-        else if (currentDialog.equals("endDate")){
+        } else if (currentDialog.equals("endDate")) {
             endDate = cDate;
             System.out.println("endDate Set!");
         }
@@ -175,29 +181,42 @@ public class MainActivity extends Activity
 
         }
     }
+
     @Override
-    public void onTaskCompleted(){
+    public void onTaskCompleted() {
         ArrayList<Event> x = findFreeTime(hoursChunk);
-        Toast.makeText(getApplicationContext(), x.toString(), Toast.LENGTH_LONG).show();
+        List<DateTime> freeDates = new ArrayList<>();
+        for (Event e: x) {
+            freeDates.add(e.getStart().getDateTime());
+        }
+        for (int i = 0; i < 10; i++) {
+            freeDates.add(new DateTime(System.currentTimeMillis()));
+        }
+        //Toast.makeText(getApplicationContext(), x.toString(), Toast.LENGTH_LONG).show();
+        Intent i = new Intent(getApplicationContext(), ResultListActivity.class);
+        i.putExtra(MainActivity.FREE_DATES, (Serializable) freeDates);
+        startActivity(i);
+
     }
-    public ArrayList<Event> findFreeTime(long millis){
+
+    public ArrayList<Event> findFreeTime(long millis) {
 
         ArrayList<Event> rtn = new ArrayList<Event>();
 
-        for(int i = 0; i<=starts.size()-2;i++){
+        for (int i = 0; i <= starts.size() - 2; i++) {
 
-            long difference = starts.get(i+1).getValue() - ends.get(i).getValue();
-            if(difference > millis + 1200000){
-                while(difference > millis + 1200000){
+            long difference = starts.get(i + 1).getValue() - ends.get(i).getValue();
+            if (difference > millis + 1200000) {
+                while (difference > millis + 1200000) {
                     Event event = new Event();
-                    DateTime newDate = new DateTime(ends.get(i).getValue()+300000);
+                    DateTime newDate = new DateTime(ends.get(i).getValue() + 300000);
                     EventDateTime start = new EventDateTime().setDateTime(newDate);
-                    newDate = new DateTime(ends.get(i).getValue() + millis+300000);
+                    newDate = new DateTime(ends.get(i).getValue() + millis + 300000);
                     EventDateTime end = new EventDateTime().setDateTime(newDate);
                     event.setStart(start);
                     event.setEnd(end);
                     rtn.add(event);
-                    millis+=1800000;
+                    millis += 1800000;
                 }
             }
 
@@ -213,9 +232,10 @@ public class MainActivity extends Activity
         removeDialog(1);
         showDialog(1);
     }
+
     @Override
     protected Dialog onCreateDialog(int id) {
-        switch(id) {
+        switch (id) {
             case 1:
                 String title;
                 Dialog dialog = null;
@@ -226,32 +246,30 @@ public class MainActivity extends Activity
                     MyDatePickerDialog dpDialog = new MyDatePickerDialog(MainActivity.this, this, year, month, day);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.calendar_title, null);
-                    ((TextView)view.findViewById(R.id.text_calendar_title)).setText(title);
+                    ((TextView) view.findViewById(R.id.text_calendar_title)).setText(title);
                     dpDialog.setCustomTitle(view);
                     dialog = dpDialog;
-                }
-                else if (currentDialog.equals("endDate")) {
+                } else if (currentDialog.equals("endDate")) {
                     title = "End Date";
                     System.out.println("creating dialogue with year " + year);
                     MyDatePickerDialog dpDialog = new MyDatePickerDialog(MainActivity.this, this, year, month, day);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.calendar_title, null);
-                    ((TextView)view.findViewById(R.id.text_calendar_title)).setText(title);
+                    ((TextView) view.findViewById(R.id.text_calendar_title)).setText(title);
                     dpDialog.setCustomTitle(view);
                     dialog = dpDialog;
-                }
-                else if (currentDialog.equals("time")) {
+                } else if (currentDialog.equals("time")) {
                     title = "Select Hours";
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(title);
                     final NumberPicker picker = new NumberPicker(this);
                     int len = 48;
-                    picker.setMaxValue(len-1);
+                    picker.setMaxValue(len - 1);
                     picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
                     picker.setMinValue(0);
                     String values[] = new String[len];
-                    for(int i = 0; i<=len-1;i++){
-                        values[i] = Double.toString((i+1)*0.5);
+                    for (int i = 0; i <= len - 1; i++) {
+                        values[i] = Double.toString((i + 1) * 0.5);
                     }
                     picker.setDisplayedValues(values);
                     picker.computeScroll();
@@ -284,11 +302,11 @@ public class MainActivity extends Activity
      * appropriate.
      */
     private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (!isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential, this).execute();
@@ -334,17 +352,18 @@ public class MainActivity extends Activity
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
+     *
      * @param requestCode code indicating which activity result is incoming.
-     * @param resultCode code indicating the result of the incoming
-     *     activity result.
-     * @param data Intent (containing result data) returned by incoming
-     *     activity result.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
      */
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     mOutputText.setText(
@@ -380,11 +399,12 @@ public class MainActivity extends Activity
 
     /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     * @param requestCode The request code passed in
-     *     requestPermissions(android.app.Activity, String, int, String[])
-     * @param permissions The requested permissions. Never null.
+     *
+     * @param requestCode  The request code passed in
+     *                     requestPermissions(android.app.Activity, String, int, String[])
+     * @param permissions  The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions
-     *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     *                     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -398,9 +418,10 @@ public class MainActivity extends Activity
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
@@ -410,9 +431,10 @@ public class MainActivity extends Activity
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
@@ -421,6 +443,7 @@ public class MainActivity extends Activity
 
     /**
      * Checks whether the device currently has a network connection.
+     *
      * @return true if the device has a network connection, false otherwise.
      */
     private boolean isDeviceOnline() {
@@ -432,8 +455,9 @@ public class MainActivity extends Activity
 
     /**
      * Check that Google Play services APK is installed and up to date.
+     *
      * @return true if Google Play Services is available and up to
-     *     date on this device; false otherwise.
+     * date on this device; false otherwise.
      */
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
@@ -461,8 +485,9 @@ public class MainActivity extends Activity
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
+     *
      * @param connectionStatusCode code describing the presence (or lack of)
-     *     Google Play Services on this device.
+     *                             Google Play Services on this device.
      */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
@@ -475,8 +500,6 @@ public class MainActivity extends Activity
     }
 
 
-
-
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
@@ -487,7 +510,8 @@ public class MainActivity extends Activity
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
         private onTaskCompleted listener;
-        public MakeRequestTask(GoogleAccountCredential credential,onTaskCompleted listener) {
+
+        public MakeRequestTask(GoogleAccountCredential credential, onTaskCompleted listener) {
             this.listener = listener;
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -499,6 +523,7 @@ public class MainActivity extends Activity
 
         /**
          * Background task to call Google Calendar API.
+         *
          * @param params no parameters needed for this task.
          */
         @Override
@@ -515,6 +540,7 @@ public class MainActivity extends Activity
 
         /**
          * Fetch a list of the next 10 events from the primary calendar.
+         *
          * @return List of Strings describing returned events.
          * @throws IOException
          */
@@ -524,8 +550,8 @@ public class MainActivity extends Activity
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
-            DateTime newStart = new DateTime(MainActivity.startDate,TimeZone.getDefault());
-            DateTime newEnd = new DateTime (MainActivity.endDate, TimeZone.getDefault());
+            DateTime newStart = new DateTime(MainActivity.startDate, TimeZone.getDefault());
+            DateTime newEnd = new DateTime(MainActivity.endDate, TimeZone.getDefault());
             Events events = mService.events().list("primary")
                     .setSingleEvents(true)
                     .setMaxResults(1000)
@@ -544,7 +570,7 @@ public class MainActivity extends Activity
                     // the start date.
                     start = event.getStart().getDate();
                 }
-                if(end == null){
+                if (end == null) {
                     end = event.getEnd().getDate();
                 }
                 eventStrings.add(
@@ -552,6 +578,7 @@ public class MainActivity extends Activity
                 starts.add(start);
                 ends.add(end);
             }
+            //Toast.makeText(getApplicationContext(), eventStrings.toString(), Toast.LENGTH_LONG).show();
             return eventStrings;
         }
 
@@ -569,7 +596,7 @@ public class MainActivity extends Activity
                 mOutputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                //mOutputText.setText(TextUtils.join("\n", output));
+                mOutputText.setText(TextUtils.join("\n", output));
 
             }
             listener.onTaskCompleted();
@@ -590,6 +617,8 @@ public class MainActivity extends Activity
                 } else {
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
+                    Toast.makeText(getApplicationContext(), "The following error occurred:\n"
+                            + mLastError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
                 mOutputText.setText("Request cancelled.");
