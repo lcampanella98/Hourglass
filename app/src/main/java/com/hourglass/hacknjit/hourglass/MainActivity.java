@@ -16,9 +16,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,7 +47,7 @@ public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private Button mCallApiButton;
+    private android.support.design.widget.FloatingActionButton mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -69,20 +66,10 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
+        setContentView(R.layout.activity_main);
 
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        mCallApiButton = new Button(this);
-        mCallApiButton.setText(BUTTON_TEXT);
+        android.support.design.widget.CoordinatorLayout activityLayout = (android.support.design.widget.CoordinatorLayout)findViewById(R.id.activity_layout);
+        mCallApiButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.mCallApiButton);
         mCallApiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,21 +79,17 @@ public class MainActivity extends Activity
                 mCallApiButton.setEnabled(true);
             }
         });
-        activityLayout.addView(mCallApiButton);
 
-        mOutputText = new TextView(this);
-        mOutputText.setLayoutParams(tlp);
+        mOutputText = (TextView) findViewById(R.id.mOutputText);
         mOutputText.setPadding(16, 16, 16, 16);
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
                 "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
-        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
 
-        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -360,7 +343,7 @@ public class MainActivity extends Activity
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(200)
+                    .setMaxResults(10)
                     .setTimeMin(now)
                     //.setTimeMax(max)
                     .setOrderBy("startTime")
@@ -402,12 +385,12 @@ public class MainActivity extends Activity
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
-                long arr[] = new long[starts.size()];
+                ArrayList<String> arr = new ArrayList<>();
                 for(int i = 0; i<=starts.size()-1;i++){
-                    //Minutes minutes = Minutes.minutesBetween(starts.get(i), ends.get(i));
+                    long difference = ends.get(i).getValue() - starts.get(i).getValue();
+                    arr.add(String.valueOf(difference));
                 }
-                //mOutputText.setText(starts.toString() + '\n' + ends.toString());
-                mOutputText.setText(arr.toString());
+                mOutputText.setText(arr.toString() + '\n' + starts.toString() + ends.toString()+ '\n');
             }
         }
 
