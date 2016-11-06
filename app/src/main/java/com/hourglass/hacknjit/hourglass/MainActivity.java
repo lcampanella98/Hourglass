@@ -91,8 +91,6 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        starts = new ArrayList<>();
-        ends = new ArrayList<>();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         calendar = new GregorianCalendar();
@@ -169,6 +167,9 @@ public class MainActivity extends Activity
         } else {
             // start new activity showing results
             // use startDate and endDate
+            starts = new ArrayList<>();
+            ends = new ArrayList<>();
+
             Toast.makeText(getApplicationContext(), startDate.toString() + "\n" + endDate.toString() + "\n" + hoursChunk, Toast.LENGTH_LONG).show();
             getResultsFromApi();
 
