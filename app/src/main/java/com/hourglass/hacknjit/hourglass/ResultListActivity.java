@@ -2,9 +2,11 @@ package com.hourglass.hacknjit.hourglass;
 
 import android.app.ListActivity;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +30,7 @@ import java.util.TimeZone;
 
 public class ResultListActivity extends AppCompatActivity {
 
-    private ArrayAdapter<String> adapter;
+    private MyListAdapter adapter;
     private Toolbar toolbar;
     private ListView listView;
     private TextView emptyListText;
@@ -58,7 +60,7 @@ public class ResultListActivity extends AppCompatActivity {
             stringDates.add(getDateText(dt));
         }
 
-        adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.result_list_row, R.id.text_result_list_row_date, stringDates);
+        adapter = new MyListAdapter(getApplicationContext(), R.layout.result_list_row, R.id.text_result_list_row_date, stringDates);
         listView.setAdapter(adapter);
 
         listView.setEmptyView(emptyListText);
@@ -66,22 +68,17 @@ public class ResultListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                adapter.setChosenPosition(position);
                 if (selectedView != null) {
-                    TextView tv = (TextView) selectedView.findViewById(R.id.text_result_list_row_date);
-                    tv.setTextColor(prevTextColor);
-                    tv.setBackgroundColor(prevBGColor);
+                    TextView tv = (TextView) (selectedView.findViewById(R.id.text_result_list_row_date));
+                    tv.setBackgroundColor(getApplicationContext().getResources().getColor(android.R.color.background_light));
+                    tv.setTextColor(getApplicationContext().getResources().getColor(android.R.color.secondary_text_light));
                 }
                 selectedView = view;
-                TextView tv = (TextView) selectedView.findViewById(R.id.text_result_list_row_date);
-                prevBGColor = tv.getSolidColor();
-                prevTextColor = tv.getCurrentTextColor();
-                tv.setTextColor(getResources().getColor(android.R.color.white));
-                tv.setBackgroundColor(getResources().getColor(R.color.colorAccentLight));
+                TextView tv = (TextView) (selectedView.findViewById(R.id.text_result_list_row_date));
+                tv.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.colorAccentLight));
+                tv.setTextColor(getApplicationContext().getResources().getColor(android.R.color.white));
 
-                String selected = adapter.getItem(position);
-                if (selected != null) {
-                    Toast.makeText(getApplicationContext(), "Selected " + selected, Toast.LENGTH_LONG).show();
-                }
             }
         });
     }
@@ -96,6 +93,7 @@ public class ResultListActivity extends AppCompatActivity {
 
     private String getDateText(DateTime dt) {
         Date date = new Date(dt.getValue());
+        System.out.println(date.toString());
         return DAYS_OF_WEEK[date.getDay()] + ", " + MONTHS[date.getMonth()] + " " + date.getDate() +  " at " + new SimpleDateFormat("h:mm a", Locale.US).format(date);
     }
 }

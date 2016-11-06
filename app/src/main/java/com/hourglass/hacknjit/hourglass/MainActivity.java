@@ -17,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,7 +153,7 @@ public class MainActivity extends Activity
 
 
         try {
-            cDate = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+            cDate = sdf.parse(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -189,9 +188,7 @@ public class MainActivity extends Activity
         for (Event e: x) {
             freeDates.add(e.getStart().getDateTime());
         }
-        for (int i = 0; i < 10; i++) {
-            freeDates.add(new DateTime(System.currentTimeMillis()));
-        }
+
         //Toast.makeText(getApplicationContext(), x.toString(), Toast.LENGTH_LONG).show();
         Intent i = new Intent(getApplicationContext(), ResultListActivity.class);
         i.putExtra(MainActivity.FREE_DATES, (Serializable) freeDates);
@@ -202,24 +199,35 @@ public class MainActivity extends Activity
     public ArrayList<Event> findFreeTime(long millis) {
 
         ArrayList<Event> rtn = new ArrayList<Event>();
-
+        long difference = Integer.MAX_VALUE;
         for (int i = 0; i <= starts.size() - 2; i++) {
-
-            long difference = starts.get(i + 1).getValue() - ends.get(i).getValue();
-            if (difference > millis + 1200000) {
-                while (difference > millis + 1200000) {
+            difference = starts.get(i + 1).getValue() - ends.get(i).getValue();
+            if(difference > millis + 1200000) {
+                long temp = millis;
+                int counter = 0;
+                while(difference > temp + 1200000) {
                     Event event = new Event();
-                    DateTime newDate = new DateTime(ends.get(i).getValue() + 300000);
+                    DateTime newDate = new DateTime(ends.get(i).getValue() + 300000 + 1800000*counter);
+
+                    Date d = new Date(newDate.getValue());
+                    if(d.getHours() <= 5 && d.getHours() >=2 ){
+                        difference -= 1800000;
+                        counter+=1;
+                        continue;
+
+                    }
+
                     EventDateTime start = new EventDateTime().setDateTime(newDate);
-                    newDate = new DateTime(ends.get(i).getValue() + millis + 300000);
+                    newDate = new DateTime(ends.get(i).getValue() + millis + 300000 + 1800000*counter);
                     EventDateTime end = new EventDateTime().setDateTime(newDate);
                     event.setStart(start);
                     event.setEnd(end);
                     rtn.add(event);
-                    millis += 1800000;
+                    difference -= 1800000;
+
+                    counter+=1;
                 }
             }
-
         }
 
         return rtn;
@@ -282,7 +290,7 @@ public class MainActivity extends Activity
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            hoursChunk = picker.getValue();
+                            hoursChunk = ((picker.getValue())+1)/2 * 60 * 60000;
                             addNextDialog();
                         }
                     });
@@ -596,7 +604,7 @@ public class MainActivity extends Activity
                 mOutputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+                //mOutputText.setText(TextUtils.join("\n", output));
 
             }
             listener.onTaskCompleted();
