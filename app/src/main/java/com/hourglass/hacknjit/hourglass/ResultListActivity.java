@@ -3,6 +3,7 @@ package com.hourglass.hacknjit.hourglass;
 import android.app.ListActivity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -79,6 +80,17 @@ public class ResultListActivity extends AppCompatActivity {
                 tv.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.colorAccentLight));
                 tv.setTextColor(getApplicationContext().getResources().getColor(android.R.color.white));
 
+            }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer pos = adapter.getChosenPosition();
+                if (pos != null) {
+                    // start the activity!!!
+                }
             }
         });
     }

@@ -51,4 +51,8 @@ public class MyListAdapter extends ArrayAdapter<String> {
     public void setChosenPosition(int position) {
         this.chosenPosition = position;
     }
+
+    public Integer getChosenPosition() {
+        return chosenPosition;
+    }
 }

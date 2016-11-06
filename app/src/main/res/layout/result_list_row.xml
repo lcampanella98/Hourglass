@@ -13,6 +13,7 @@
         android:paddingLeft="10dp"
         android:textColor="@color/colorPrimary"
         android:paddingRight="10dp"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:background="@android:color/background_light" />
 
 </RelativeLayout>
