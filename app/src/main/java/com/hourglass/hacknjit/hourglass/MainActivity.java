@@ -87,6 +87,7 @@ public class MainActivity extends Activity
         mOutputText.setText(
                 "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
 
+
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
 
