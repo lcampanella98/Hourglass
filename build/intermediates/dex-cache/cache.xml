@@ -48,15 +48,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\9.0.2\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="aec1bc54964a85d851c2c1b1cb7f90f7dbd755ab">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-tasks-9.0.2_7ce2926d091e33e82b396588a3469d7088bf7c61\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -72,24 +63,6 @@
         revision="25.0.0"
         sha1="f6c3aed1cdfa21b5c1737c915186ea93a95a58bd">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\jackson-core-2.1.3_9457f8d4af2f6829a0dba98abc9672f1cb990a15\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.0.2\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="4022261eeea0d92eb2997a68d2c1f084a16abad9">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-basement-9.0.2_db822b38f5987d97afbf4329ff69c73decfcbb16\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth-base\9.0.2\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="829c6e46cb221c2102801221c648b77113743e81">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-auth-base-9.0.2_e5ded91e0e36a9793b163465d77d55d8c856eb1a\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -120,15 +93,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\9.0.2\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="060a7157438a0b1b0706b99c430fb3ecbc5a79a4">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-auth-9.0.2_de237d92d47436530f5737106d6f049ce26ad2eb\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Michael\.gradle\caches\modules-2\files-2.1\com.google.apis\google-api-services-calendar\v3-rev221-1.22.0\b0915a11b31ff753bdd9fcfe9fa6acc0a61c4711\google-api-services-calendar-v3-rev221-1.22.0.jar"
         jumboMode="true"
         optimize="true"
@@ -147,12 +111,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\9.0.2\jars\classes.jar"
+        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="94d9cedd04b124aed044ac71c451a292856d854c">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-9.0.2_c09e34633f230cbe3db94a63daabb22c862d8b29\classes.dex" />
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-8.4.0_3437a942c5698164d06249a6778455e2285992b2\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -241,7 +205,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="412ad1aea296573ddfad09b48b94765e47724083">
+        sha1="ceda3d9418770076bc5084cdde93011060a2fe86">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_1548faa7d11ccf41fccc8e1c11ffba0dd83374c7\classes.dex" />
     </item>
     <item
@@ -250,7 +214,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="0cd35a0e63a8d50f93aacb4f2982d26c4b00e716">
+        sha1="2eccf08a6f2b77089b69651aaf8aeb67b85bd4c4">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_bdcfccbabed2565eb06160dbb5e3e7c9a0c22a4c\classes.dex" />
     </item>
     <item
@@ -261,6 +225,24 @@
         revision="25.0.0"
         sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_1d73614adc383b8aa82c527787fddff8705c3946\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-auth-8.4.0_24f5fe74dc42db25902e927892b29ec11798941d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-basement-8.4.0_a0b17901a6a274bf35ff2dec58b16cc2bdd62d65\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -279,15 +261,6 @@
         revision="25.0.0"
         sha1="2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0">
         <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\jetty-6.1.26_7c5c4d1d0467f10c86f7abe054b8f125637ad9b2\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\exploded-aar\com.google.firebase\firebase-common\9.0.2\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="9919563cffd8e3732e944d3c437d4b9575a08448">
-        <dex dex="C:\Users\Michael\AndroidStudioProjects\Hourglass\CheckOUt\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-common-9.0.2_449cef2322e18e4f0da5a9e755f5010cde3cc7ff\classes.dex" />
     </item>
     <item
         is-multidex="true"

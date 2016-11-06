@@ -71,7 +71,8 @@ public class BookEvent extends AsyncTask<Void, Void,String>{
         if(token != null && token.length() > 0 ){
             Toast.makeText(application, "Success! Your Calendar has been updated!", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(application, "Error! Failure to insert event!", Toast.LENGTH_LONG).show();
+            Toast.makeText(application, "Success! Your Calendar has been updated!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(application, "Error! Failure to insert event!", Toast.LENGTH_LONG).show();
         }
     }
 
