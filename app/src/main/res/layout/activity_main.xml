@@ -5,12 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/activity_layout"
     tools:context="com.hourglass.hacknjit.hourglass.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:id="@+id/appBar"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -18,29 +16,21 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-
-
+    android:background="?attr/colorPrimary"
+    app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:layout_width="match_parent" android:id="@+id/mOutputText"
-        android:layout_height="wrap_content"
-        android:textSize="14dp" android:gravity="bottom"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/appBar"
-        android:layout_marginRight="10dp"
-        android:layout_weight="1">
-
-    </TextView>
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/mCallApiButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+    android:id="@+id/fab"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:layout_margin="@dimen/fab_margin"
+        android:background="@drawable/button_selector"
+        android:elevation="20dp"
+        app:srcCompat="@drawable/hourglass"
+        app:layout_anchorGravity="center_vertical|center_horizontal" />
+
+    <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>

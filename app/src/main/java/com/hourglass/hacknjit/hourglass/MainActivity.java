@@ -3,20 +3,34 @@ package com.hourglass.hacknjit.hourglass;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -38,16 +52,20 @@ import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends Activity
-        implements EasyPermissions.PermissionCallbacks {
+        implements EasyPermissions.PermissionCallbacks, DatePickerDialog.OnDateSetListener{
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private android.support.design.widget.FloatingActionButton mCallApiButton;
+    private FloatingActionButton fab;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -59,6 +77,12 @@ public class MainActivity extends Activity
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
+    private String currentDialog;
+    private int day, month, year;
+    private Date startDate, endDate;
+    private int hoursChunk;
+    private java.util.Calendar calendar;
+
     /**
      * Create the main activity.
      * @param savedInstanceState previously saved instance data.
@@ -68,26 +92,32 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        android.support.design.widget.CoordinatorLayout activityLayout = (android.support.design.widget.CoordinatorLayout)findViewById(R.id.activity_layout);
-        mCallApiButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.mCallApiButton);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        calendar = new GregorianCalendar();
+        dialogsQueue = new LinkedList<>();
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
+            public boolean onLongClick(View v) {
+                // call the dialogs in sequence
+
+                // first dialog: number of hours
+
+                // second dialog: start date
+                day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+                month = calendar.get(java.util.Calendar.MONTH);
+                year = calendar.get(java.util.Calendar.YEAR);
+                dialogsQueue.clear();
+                dialogsQueue.addAll(Arrays.asList("time", "startDate", "endDate"));
+                currentDialog = dialogsQueue.peek();
+                System.out.println("Adding first dialog...");
+                addNextDialog();
+
+                return true;
             }
         });
 
-        mOutputText = (TextView) findViewById(R.id.mOutputText);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
-
-
+        mOutputText = (TextView) findViewById(R.id.text_calendar_output);
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
 
@@ -96,9 +126,107 @@ public class MainActivity extends Activity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+        getResultsFromApi();
+
+
+    }
+    Date cDate;
+    Queue<String> dialogsQueue;
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        System.out.println("Date Set!");
+        this.year = year;
+        this.month = monthOfYear;
+        this.day = dayOfMonth;
+        cDate = new Date(year, monthOfYear, dayOfMonth);
+        if (currentDialog.equals("startDate")) {
+            System.out.println("startDate Set!");
+            startDate = cDate;
+        }
+        else if (currentDialog.equals("endDate")){
+            endDate = cDate;
+            System.out.println("endDate Set!");
+        }
+        if (!dialogsQueue.isEmpty()) {
+            System.out.println("Setting next dialog");
+            addNextDialog();
+        } else {
+            // start new activity showing results
+            // use startDate and endDate
+            Toast.makeText(getApplicationContext(), startDate.toString() + "\n" + endDate.toString() + "\n" + hoursChunk, Toast.LENGTH_LONG).show();
+        }
     }
 
 
+    private void addNextDialog() {
+        currentDialog = dialogsQueue.peek();
+        dialogsQueue.remove();
+        System.out.println("showing dialog...");
+        removeDialog(1);
+        showDialog(1);
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch(id) {
+            case 1:
+                String title;
+                Dialog dialog = null;
+                if (currentDialog == null) return null;
+                if (currentDialog.equals("startDate")) {
+                    title = "Start Date";
+                    MyDatePickerDialog dpDialog = new MyDatePickerDialog(MainActivity.this, this, year, month, day);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.calendar_title, null);
+                    ((TextView)view.findViewById(R.id.text_calendar_title)).setText(title);
+                    dpDialog.setCustomTitle(view);
+                    dialog = dpDialog;
+                }
+                else if (currentDialog.equals("endDate")) {
+                    title = "End Date";
+                    MyDatePickerDialog dpDialog = new MyDatePickerDialog(MainActivity.this, this, year, month, day);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.calendar_title, null);
+                    ((TextView)view.findViewById(R.id.text_calendar_title)).setText(title);
+                    dpDialog.setCustomTitle(view);
+                    dialog = dpDialog;
+                }
+                else if (currentDialog.equals("time")) {
+                    title = "Select Hours";
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(title);
+                    final NumberPicker picker = new NumberPicker(this);
+                    int len = 48;
+                    picker.setMaxValue(len-1);
+                    picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+                    picker.setMinValue(0);
+                    String values[] = new String[len];
+                    for(int i = 0; i<=len-1;i++){
+                        values[i] = Double.toString((i+1)*0.5);
+                    }
+                    picker.setDisplayedValues(values);
+                    picker.computeScroll();
+                    final LinearLayout parent = new LinearLayout(this);
+                    parent.addView(picker, new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER));
+                    builder.setView(parent);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            hoursChunk = picker.getValue();
+                            addNextDialog();
+                        }
+                    });
+                    dialog = builder.create();
+                }
+                return dialog;
+            default:
+                return null;
+        }
+    }
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -298,6 +426,9 @@ public class MainActivity extends Activity
         dialog.show();
     }
 
+
+
+
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
@@ -416,6 +547,7 @@ public class MainActivity extends Activity
             }
         }
     }
+
     public ArrayList<Calendar> findAvaiableTimes(Event event, Time hours){
         ArrayList<Calendar> rtn = new ArrayList<Calendar>();
        // Date startDate = (event.getStart().getDate()).toDate();
