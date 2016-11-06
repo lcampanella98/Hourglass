@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -47,7 +48,7 @@ public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private android.support.design.widget.FloatingActionButton mCallApiButton;
+    private FloatingActionButton fab;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -68,24 +69,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        android.support.design.widget.CoordinatorLayout activityLayout = (android.support.design.widget.CoordinatorLayout)findViewById(R.id.activity_layout);
-        mCallApiButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.mCallApiButton);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
-            }
-        });
-
-        mOutputText = (TextView) findViewById(R.id.mOutputText);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+        fab = (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab);
 
 
         mProgress = new ProgressDialog(this);
@@ -96,6 +80,7 @@ public class MainActivity extends Activity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+        getResultsFromApi();
     }
 
 
