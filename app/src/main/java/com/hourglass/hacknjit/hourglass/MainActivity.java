@@ -2,6 +2,7 @@ package com.hourglass.hacknjit.hourglass;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,10 +13,9 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.widget.Button;
+import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,12 +43,11 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private Button mCallApiButton;
-    private Toolbar toolbar;
+    private android.support.design.widget.FloatingActionButton mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -58,32 +57,47 @@ public class MainActivity extends AppCompatActivity
 
     private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
     /**
      * Create the main activity.
-     *
      * @param savedInstanceState previously saved instance data.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mOutputText = (TextView) findViewById(R.id.text_calendar_output);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        android.support.design.widget.CoordinatorLayout activityLayout = (android.support.design.widget.CoordinatorLayout)findViewById(R.id.activity_layout);
+        mCallApiButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.mCallApiButton);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+                getResultsFromApi();
+                mCallApiButton.setEnabled(true);
+            }
+        });
+
+        mOutputText = (TextView) findViewById(R.id.mOutputText);
+        mOutputText.setPadding(16, 16, 16, 16);
+        mOutputText.setVerticalScrollBarEnabled(true);
+        mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setText(
+                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+
+
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
 
-
-        setSupportActionBar(toolbar);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-        getResultsFromApi();
-
     }
+
 
 
     /**
@@ -94,11 +108,11 @@ public class MainActivity extends AppCompatActivity
      * appropriate.
      */
     private void getResultsFromApi() {
-        if (!isGooglePlayServicesAvailable()) {
+        if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (!isDeviceOnline()) {
+        } else if (! isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
@@ -144,18 +158,17 @@ public class MainActivity extends AppCompatActivity
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
-     *
      * @param requestCode code indicating which activity result is incoming.
-     * @param resultCode  code indicating the result of the incoming
-     *                    activity result.
-     * @param data        Intent (containing result data) returned by incoming
-     *                    activity result.
+     * @param resultCode code indicating the result of the incoming
+     *     activity result.
+     * @param data Intent (containing result data) returned by incoming
+     *     activity result.
      */
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     mOutputText.setText(
@@ -191,12 +204,11 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     *
-     * @param requestCode  The request code passed in
-     *                     requestPermissions(android.app.Activity, String, int, String[])
-     * @param permissions  The requested permissions. Never null.
+     * @param requestCode The request code passed in
+     *     requestPermissions(android.app.Activity, String, int, String[])
+     * @param permissions The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions
-     *                     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -210,10 +222,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
-     *
      * @param requestCode The request code associated with the requested
-     *                    permission
-     * @param list        The requested permission list. Never null.
+     *         permission
+     * @param list The requested permission list. Never null.
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
@@ -223,10 +234,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
-     *
      * @param requestCode The request code associated with the requested
-     *                    permission
-     * @param list        The requested permission list. Never null.
+     *         permission
+     * @param list The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
@@ -235,7 +245,6 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Checks whether the device currently has a network connection.
-     *
      * @return true if the device has a network connection, false otherwise.
      */
     private boolean isDeviceOnline() {
@@ -247,9 +256,8 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Check that Google Play services APK is installed and up to date.
-     *
      * @return true if Google Play Services is available and up to
-     * date on this device; false otherwise.
+     *     date on this device; false otherwise.
      */
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
@@ -277,9 +285,8 @@ public class MainActivity extends AppCompatActivity
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
-     *
      * @param connectionStatusCode code describing the presence (or lack of)
-     *                             Google Play Services on this device.
+     *     Google Play Services on this device.
      */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
@@ -310,7 +317,6 @@ public class MainActivity extends AppCompatActivity
 
         /**
          * Background task to call Google Calendar API.
-         *
          * @param params no parameters needed for this task.
          */
         @Override
@@ -326,13 +332,11 @@ public class MainActivity extends AppCompatActivity
 
         /**
          * Fetch a list of the next 10 events from the primary calendar.
-         *
          * @return List of Strings describing returned events.
          * @throws IOException
          */
         private ArrayList<DateTime> starts;
         private ArrayList<DateTime> ends;
-
         private List<String> getDataFromApi() throws IOException {
             starts = new ArrayList<>();
             ends = new ArrayList<>();
@@ -340,7 +344,7 @@ public class MainActivity extends AppCompatActivity
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(200)
+                    .setMaxResults(10)
                     .setTimeMin(now)
                     //.setTimeMax(max)
                     .setOrderBy("startTime")
@@ -356,7 +360,7 @@ public class MainActivity extends AppCompatActivity
                     // the start date.
                     start = event.getStart().getDate();
                 }
-                if (end == null) {
+                if(end == null){
                     end = event.getEnd().getDate();
                 }
                 eventStrings.add(
@@ -382,12 +386,12 @@ public class MainActivity extends AppCompatActivity
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
-                long arr[] = new long[starts.size()];
-                for (int i = 0; i <= starts.size() - 1; i++) {
-                    //Minutes minutes = Minutes.minutesBetween(starts.get(i), ends.get(i));
+                ArrayList<String> arr = new ArrayList<>();
+                for(int i = 0; i<=starts.size()-1;i++){
+                    long difference = ends.get(i).getValue() - starts.get(i).getValue();
+                    arr.add(String.valueOf(difference));
                 }
-                //mOutputText.setText(starts.toString() + '\n' + ends.toString());
-                mOutputText.setText(arr.toString());
+                mOutputText.setText(arr.toString() + '\n' + starts.toString() + ends.toString()+ '\n');
             }
         }
 
@@ -412,12 +416,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-    public ArrayList<Calendar> findAvaiableTimes(Event event, Time hours) {
+    public ArrayList<Calendar> findAvaiableTimes(Event event, Time hours){
         ArrayList<Calendar> rtn = new ArrayList<Calendar>();
-        // Date startDate = (event.getStart().getDate()).toDate();
+       // Date startDate = (event.getStart().getDate()).toDate();
         //DateTime endDate = event.getEnd().getDate();
-        // DateTime startTime = event.getStart().getDateTime();
+       // DateTime startTime = event.getStart().getDateTime();
         //DateTime endTime = event.getEnd().getDateTime();
 
 
